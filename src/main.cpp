@@ -1,5 +1,6 @@
 #include <iostream>
 #include "operations/add_operation.hpp"
+#include "operations/mul_operation.hpp"
 #include "integral.hpp"
 #include "visitor.hpp"
 
@@ -13,12 +14,19 @@ public:
        op._rhs->accept(e2);
 
        result = e1.result + e2.result;
-    };
+    }
+    virtual void visitMul(const MulOperation& op) override final{
+        TEvaluate e1, e2;
+        op._lhs->accept(e1);
+        op._rhs->accept(e2);
+
+        result = e1.result * e2.result;
+    }
 
     virtual void visitLiteral(const TIntegral& op) override final{
         result = op.getValue();
     }
-
+public:
     int result;
 };
 
@@ -33,6 +41,15 @@ public:
 
         result = c1.result + "+" + c2.result;
     }
+
+    virtual void visitMul(const MulOperation& op) override final{
+        Concat c1, c2;
+        op._lhs->accept(c1);
+        op._rhs->accept(c2);
+
+        result = c1.result + "*" + c2.result;
+    }
+
     virtual void visitLiteral(const TIntegral& op) override final{
         result = std::to_string(op.getValue());
     }
@@ -54,7 +71,6 @@ int main(){
     std::cout << ev.result << std::endl;
 
     op2.accept(ev);
-
     std::cout << ev.result << std::endl;
 
     Concat c;
@@ -62,5 +78,13 @@ int main(){
     op2.accept(c);
     std::cout << c.result << std::endl;/// 1+2+1+2
 
+    MulOperation op3(&lhs, &rhs);
+    MulOperation op4(&op3, &op2);
+
+    op3.accept(ev);
+    std::cout << ev.result << std::endl;
+
+    op4.accept(ev);
+    std::cout << ev.result << std::endl;
     return 0;
 }
