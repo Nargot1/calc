@@ -5,9 +5,9 @@
 
 class TEvaluate : public IVisitor {
 public:
-  virtual ~TEvaluate() {}
+    virtual ~TEvaluate() {}
 
-  virtual void visitAdd(const TAddOperation& op) override final{
+    virtual void visitAdd(const TAddOperation& op) override final{
        TEvaluate e1, e2;
        op._lhs->accept(e1);
        op._rhs->accept(e2);
@@ -15,11 +15,29 @@ public:
        result = e1.result + e2.result;
     };
 
-   virtual void visitLiteral(const TIntegral& op) override final{
+    virtual void visitLiteral(const TIntegral& op) override final{
         result = op.getValue();
-   }
+    }
 
     int result;
+};
+
+class Concat : public IVisitor {
+public:
+    virtual ~Concat() = default;
+
+    virtual void visitAdd(const TAddOperation& op) override final{
+        Concat c1, c2;
+        op._lhs->accept(c1);
+        op._rhs->accept(c2);
+
+        result = c1.result + "+" + c2.result;
+    }
+    virtual void visitLiteral(const TIntegral& op) override final{
+        result = std::to_string(op.getValue());
+    }
+public:
+    std::string result;
 };
 
 
@@ -39,7 +57,10 @@ int main(){
 
     std::cout << ev.result << std::endl;
 
-    /// 1+2+1+2
+    Concat c;
+
+    op2.accept(c);
+    std::cout << c.result << std::endl;/// 1+2+1+2
 
     return 0;
 }
