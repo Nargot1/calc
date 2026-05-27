@@ -57,7 +57,27 @@ public:
     std::string result;
 };
 
+IOperation* parseLhs(std::string str) {
 
+    size_t pos = str.find_first_of('+');
+
+    bool isLeftPos = pos != std::string::npos;
+    std::string leftStr = str.substr(0, isLeftPos ? pos : str.size());
+    TIntegral* lhs = new TIntegral(std::stoi(leftStr));
+
+    if (!isLeftPos)
+        return lhs;
+    
+    size_t rightPos = str.find_first_of('+', pos + 1);
+    bool isRightPos = rightPos != std::string::npos;
+    std::string rhsStr = str.substr(pos + 1, isRightPos ? rightPos : str.size());
+    TIntegral* rhs = new TIntegral(std::stoi(rhsStr));
+    TAddOperation* mainOp = new TAddOperation(lhs, rhs);
+    if (isRightPos) {
+        mainOp = new TAddOperation(mainOp, parseLhs(str.substr(rightPos + 1, str.size())));
+    }
+    return mainOp;
+}
 int main(){
     TIntegral lhs(1);
     TIntegral rhs(2);
@@ -85,6 +105,16 @@ int main(){
     std::cout << ev.result << std::endl;
 
     op4.accept(ev);
+    std::cout << ev.result << std::endl;
+    
+    IOperation* op5 = parseLhs("1+2");
+
+    op5->accept(ev);
+    std::cout << ev.result << std::endl;//3
+
+    IOperation* op6 = parseLhs("1+2+2");
+
+    op6->accept(ev);
     std::cout << ev.result << std::endl;
     return 0;
 }
