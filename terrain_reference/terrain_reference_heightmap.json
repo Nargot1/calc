@@ -1,0 +1,24 @@
+{
+  "source": "result_1793266117047.glb",
+  "axes": "x = image column (left->right), z = image row (top->bottom), y = height (up)",
+  "width_px": 1024,
+  "height_px": 961,
+  "pixel_size": 0.0008989588302724501,
+  "origin_x": -0.418314518910997,
+  "origin_z": -0.46593329547082674,
+  "note": "world_x = origin_x + col*pixel_size ; world_z = origin_z + row*pixel_size ; world_y = y_min + value/65535*(y_max-y_min)",
+  "y_min": -0.0947277694940567,
+  "y_max": 0.3341163992881775,
+  "source_bounds_min": [
+    -0.4169660806655884,
+    -0.0961437001824379,
+    -0.4645848572254181
+  ],
+  "source_bounds_max": [
+    0.4999719262123108,
+    0.3341163992881775,
+    0.3953215181827545
+  ],
+  "mask": "non-zero pixels of *_mask.png are inside the terrain footprint",
+  "removed": "non-zero pixels of *_removed.png were classified as objects/walls and interpolated"
+}
